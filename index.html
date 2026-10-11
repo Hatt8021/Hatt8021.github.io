@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>John Phφe | Ranking</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #090909;
+  --panel: #141414;
+  --gold: #c6a96b;
+  --text: #f4f1e9;
+  --muted: #99958b;
+  --line: #302d26;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+}
+header {
+  padding: 42px 20px 28px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+.eyebrow {
+  color: var(--gold);
+  letter-spacing: .3em;
+  font-size: 11px;
+}
+h1 {
+  font-size: clamp(27px, 6vw, 46px);
+  letter-spacing: .06em;
+  margin: 14px 0 8px;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .15em;
+}
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 26px 16px 60px;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.tabs button {
+  flex: 1;
+  padding: 13px 5px;
+  background: #111;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 3px;
+  font-size: 13px;
+}
+.tabs button.active {
+  background: var(--gold);
+  color: #111;
+  border-color: var(--gold);
+  font-weight: 700;
+}
+.section-title {
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: .2em;
+  margin: 0 0 14px;
+}
+#ranking {
+  display: grid;
+  gap: 10px;
+}
+.song {
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr) auto;
+  gap: 12px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 17px 14px;
+  border-radius: 4px;
+}
+.rank {
+  color: var(--gold);
+  font-size: 24px;
+  text-align: center;
+  font-weight: 300;
+}
+.song-name {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.song-meta {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 6px;
+  line-height: 1.7;
+}
+.score {
+  text-align: right;
+  font-size: 20px;
+  white-space: nowrap;
+}
+.score small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 5px;
+}
+.note {
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.9;
+  text-align: center;
+}
+footer {
+  border-top: 1px solid var(--line);
+  padding: 22px 12px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+@media (max-width: 420px) {
+  .song { grid-template-columns: 36px minmax(0,1fr) auto; gap: 8px; padding: 14px 9px; }
+  .rank { font-size: 20px; }
+  .song-name { font-size: 13px; }
+  .score { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">OFFICIAL MUSIC RANKING</div>
+  <h1>John Phφe</h1>
+  <div class="subtitle">MUSIC ARCHIVE / RANKING</div>
+</header>
+<main>
+  <div class="tabs">
+    <button class="active" data-type="gbuc">GBUC</button>
+    <button data-type="eggs">Eggs</button>
+    <button data-type="overall">Overall</button>
+  </div>
+  <h2 class="section-title" id="heading">GBUC RANKING</h2>
+  <div id="ranking"></div>
+  <p class="note">
+    Ranking data is manually maintained.<br>
+    Last updated: <span id="updated">—</span><br>
+    John Phφe · Independent Music Project
+  </p>
+</main>
+<footer>JOHN PHφE © MUSIC RANKING</footer>
+<script>
+const songs = [
+  {name:"Brave", bp:12, bv:1, ep:10, el:1},
+  {name:"Brave - Sped Up ver. -", bp:11, bv:0, ep:3, el:1},
+  {name:"Brave - Slowed+reverb ver. -", bp:11, bv:0, ep:2, el:1},
+  {name:"Brave - Wobble remix -", bp:5, bv:0, ep:1, el:1},
+  {name:"Mornin' Dancer", bp:9, bv:0, ep:3, el:1},
+  {name:"Mornin' Dancer - Sped Up ver. -", bp:6, bv:1, ep:1, el:1},
+  {name:"Mornin' Dancer - Slowed+reverb ver. -", bp:8, bv:0, ep:2, el:1},
+  {name:"Mornin' Dancer - Dawnflux remix -", bp:10, bv:0, ep:3, el:1},
+  {name:"Dawn", bp:22, bv:2, ep:4, el:1},
+  {name:"Dawn - Sped Up ver. -", bp:7, bv:0, ep:1, el:1},
+  {name:"Dawn - Slowed+reverb ver. -", bp:8, bv:0, ep:2, el:1},
+  {name:"Dawn - Chill remix -", bp:18, bv:0, ep:1, el:1}
+];
+let type = "gbuc";
+function rankSongs(key, ascending=false) {
+  return [...songs].sort((a,b) =>
+    ascending ? a[key]-b[key] : b[key]-a[key]
+  );
+}
+function render() {
+  const ranked = type === "gbuc"
+    ? rankSongs("bp")
+    : type === "eggs"
+    ? rankSongs("ep")
+    : songs.map(s => ({
+        ...s,
+        overall: (
+          (rankSongs("bp").findIndex(x=>x.name===s.name)+1) +
+          (rankSongs("ep").findIndex(x=>x.name===s.name)+1)
+        ) / 2
+      })).sort((a,b)=>a.overall-b.overall);
+
+  document.getElementById("heading").textContent =
+    type === "gbuc" ? "GBUC RANKING" :
+    type === "eggs" ? "EGGS RANKING" : "OVERALL RANKING";
+
+  document.getElementById("ranking").innerHTML = ranked.map((s,i) => {
+    const score = type === "gbuc" ? s.bp :
+      type === "eggs" ? s.ep : s.overall.toFixed(1);
+    const meta = type === "gbuc"
+      ? `Plays: ${s.bp}　/　Votes: ${s.bv}`
+      : type === "eggs"
+      ? `Plays: ${s.ep}　/　Likes: ${s.el}`
+      : `GBUC: ${s.bp} plays　/　Eggs: ${s.ep} plays`;
+    const label = type === "overall" ? "平均順位" : "再生数";
+    return `<article class="song">
+      <div class="rank">${String(i+1).padStart(2,"0")}</div>
+      <div><div class="song-name">${s.name}</div>
+      <div class="song-meta">${meta}</div></div>
+      <div class="score">${score}<small>${label}</small></div>
+    </article>`;
+  }).join("");
+}
+document.querySelectorAll(".tabs button").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    type = button.dataset.type;
+    render();
+  });
+});
+document.getElementById("updated").textContent = "2026.10.11";
+render();
+</script>
+</body>
+</html>
