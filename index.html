@@ -160,70 +160,154 @@ footer {
 </main>
 <footer>JOHN PHφE © MUSIC RANKING</footer>
 <script>
-const songs = [
-  {name:"Brave", bp:12, bv:1, ep:10, el:1},
-  {name:"Brave - Sped Up ver. -", bp:11, bv:0, ep:3, el:1},
-  {name:"Brave - Slowed+reverb ver. -", bp:11, bv:0, ep:2, el:1},
-  {name:"Brave - Wobble remix -", bp:5, bv:0, ep:1, el:1},
-  {name:"Mornin' Dancer", bp:9, bv:0, ep:3, el:1},
-  {name:"Mornin' Dancer - Sped Up ver. -", bp:6, bv:1, ep:1, el:1},
-  {name:"Mornin' Dancer - Slowed+reverb ver. -", bp:8, bv:0, ep:2, el:1},
-  {name:"Mornin' Dancer - Dawnflux remix -", bp:10, bv:0, ep:3, el:1},
-  {name:"Dawn", bp:22, bv:2, ep:4, el:1},
-  {name:"Dawn - Sped Up ver. -", bp:7, bv:0, ep:1, el:1},
-  {name:"Dawn - Slowed+reverb ver. -", bp:8, bv:0, ep:2, el:1},
-  {name:"Dawn - Chill remix -", bp:18, bv:0, ep:1, el:1}
-];
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTKmDAfBSUBfppjvD4xAVZkCqlTKHm7Faa6Ijn1ut638e9LIIU9_pwyYlPdz10RQxF3zmWU2QKdK-e1/pub?gid=0&single=true&output=csv";
+
+let songs = [];
 let type = "gbuc";
-function rankSongs(key, ascending=false) {
-  return [...songs].sort((a,b) =>
-    ascending ? a[key]-b[key] : b[key]-a[key]
-  );
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = "", quoted = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+
+    if (c === '"' && quoted && text[i + 1] === '"') {
+      cell += '"';
+      i++;
+    } else if (c === '"') {
+      quoted = !quoted;
+    } else if (c === "," && !quoted) {
+      row.push(cell);
+      cell = "";
+    } else if ((c === "\n" || c === "\r") && !quoted) {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(cell);
+      if (row.some(v => v.trim() !== "")) rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += c;
+    }
+  }
+
+  row.push(cell);
+  if (row.some(v => v.trim() !== "")) rows.push(row);
+  return rows;
 }
+
+function num(v) {
+  const n = Number(String(v ?? "").replace(/,/g, "").trim());
+  return Number.isFinite(n) ? n : 0;
+}
+
+function escapeHTML(v) {
+  return String(v).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+}
+
+async function loadSongs() {
+  const box = document.getElementById("ranking");
+  box.innerHTML = '<p class="note">Loading ranking data...</p>';
+
+  try {
+    const response = await fetch(CSV_URL);
+    if (!response.ok) throw new Error("CSV load failed");
+
+    const rows = parseCSV(await response.text());
+    if (rows.length < 2) throw new Error("No data");
+
+    songs = rows.slice(1)
+      .filter(r => r[0] && r[0].trim())
+      .map(r => ({
+        name: r[0].trim(),
+        bp: num(r[1]),
+        bv: num(r[2]),
+        ep: num(r[3]),
+        el: num(r[4]),
+        updated: r[5] || "",
+        gr: num(r[6]),
+        er: num(r[7]),
+        score: r[8] === "" ? null : num(r[8]),
+        jr: num(r[9])
+      }));
+
+    const dates = songs.map(s => s.updated).filter(Boolean);
+    document.getElementById("updated").textContent =
+      dates.length ? dates[dates.length - 1] : "—";
+
+    render();
+  } catch (e) {
+    box.innerHTML =
+      '<p class="note">ランキングを読み込めませんでした。公開設定や列の順番を確認してください。</p>';
+    console.error(e);
+  }
+}
+
 function render() {
-  const ranked = type === "gbuc"
-    ? rankSongs("bp")
-    : type === "eggs"
-    ? rankSongs("ep")
-    : songs.map(s => ({
-        ...s,
-        overall: (
-          (rankSongs("bp").findIndex(x=>x.name===s.name)+1) +
-          (rankSongs("ep").findIndex(x=>x.name===s.name)+1)
-        ) / 2
-      })).sort((a,b)=>a.overall-b.overall);
+  let ranked = [...songs];
+
+  if (type === "gbuc") {
+    ranked.sort((a, b) => (a.gr || 999999) - (b.gr || 999999));
+  } else if (type === "eggs") {
+    ranked.sort((a, b) => (a.er || 999999) - (b.er || 999999));
+  } else {
+    ranked.sort((a, b) => (a.jr || 999999) - (b.jr || 999999));
+  }
 
   document.getElementById("heading").textContent =
     type === "gbuc" ? "GBUC RANKING" :
-    type === "eggs" ? "EGGS RANKING" : "OVERALL RANKING";
+    type === "eggs" ? "EGGS RANKING" :
+    "OVERALL RANKING";
 
-  document.getElementById("ranking").innerHTML = ranked.map((s,i) => {
-    const score = type === "gbuc" ? s.bp :
-      type === "eggs" ? s.ep : s.overall.toFixed(1);
+  document.getElementById("ranking").innerHTML = ranked.map((s, i) => {
+    const rank = type === "gbuc" ? s.gr :
+      type === "eggs" ? s.er : s.jr;
+
     const meta = type === "gbuc"
-      ? `Plays: ${s.bp}　/　Votes: ${s.bv}`
+      ? `Plays: ${s.bp} / Votes: ${s.bv}`
       : type === "eggs"
-      ? `Plays: ${s.ep}　/　Likes: ${s.el}`
-      : `GBUC: ${s.bp} plays　/　Eggs: ${s.ep} plays`;
+      ? `Plays: ${s.ep} / Likes: ${s.el}`
+      : `GBUC: ${s.bp} plays / Eggs: ${s.ep} plays`;
+
+    const score = type === "gbuc" ? s.bp :
+      type === "eggs" ? s.ep :
+      (s.score === null ? "—" : s.score.toFixed(1));
+
     const label = type === "overall" ? "平均順位" : "再生数";
-    return `<article class="song">
-      <div class="rank">${String(i+1).padStart(2,"0")}</div>
-      <div><div class="song-name">${s.name}</div>
-      <div class="song-meta">${meta}</div></div>
-      <div class="score">${score}<small>${label}</small></div>
-    </article>`;
+
+    return `
+      <article class="song">
+        <div class="rank">${rank || i + 1}</div>
+        <div>
+          <div class="song-name">${escapeHTML(s.name)}</div>
+          <div class="song-meta">${meta}</div>
+        </div>
+        <div class="score">
+          ${score}
+          <small>${label}</small>
+        </div>
+      </article>`;
   }).join("");
 }
+
 document.querySelectorAll(".tabs button").forEach(button => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".tabs button")
+      .forEach(b => b.classList.remove("active"));
+
     button.classList.add("active");
     type = button.dataset.type;
     render();
   });
 });
-document.getElementById("updated").textContent = "2026.10.11";
-render();
+
+loadSongs();
 </script>
 </body>
 </html>
