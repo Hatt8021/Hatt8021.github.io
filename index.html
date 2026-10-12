@@ -90,23 +90,40 @@ main {
 /* Top 3 ranking cards */
 
 .song.rank-1 .rank {
+  position: relative;
+  isolation: isolate;
   color: #090909;
   background: linear-gradient(135deg, #fff2b0, #d4af37, #9c7118);
   border: 3px solid #f8e7a5;
-  border-radius: 8px;
-  outline: 2px solid #d4af37;
-  outline-offset: 2px;
-  width: 48px;
-  height: 54px;
+  border-radius: 12px;
+  outline: 3px solid #d4af37;
+  outline-offset: 3px;
+  width: 58px;
+  height: 66px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  font-size: 19px;
+  font-size: 23px;
   font-weight: 900;
   box-shadow: 0 0 18px #d4af3780;
-  clip-path: none;
+}
+
+.song.rank-1 .rank::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  background: linear-gradient(135deg, #fff2b0, #d4af37, #9c7118);
+  clip-path: polygon(
+    10% 0, 90% 0,
+    90% 35%, 100% 45%,
+    88% 68%, 70% 68%,
+    65% 100%, 35% 100%,
+    30% 68%, 12% 68%,
+    0 45%, 10% 35%
+  );
 }
 
 .song.rank-2 {
