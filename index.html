@@ -304,7 +304,7 @@ function render() {
     const label = type === "overall" ? "平均順位" : "再生数";
 
     return `
-      <article class="song">
+      <article class="song ${i < 3 ? `rank-${i + 1}` : ""}">
         <div class="rank">${rank || i + 1}</div>
         <div>
           <div class="song-name">${escapeHTML(s.name)}</div>
