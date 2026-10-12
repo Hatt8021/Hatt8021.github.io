@@ -217,7 +217,15 @@ footer {
   letter-spacing: .08em;
 }
 @media (max-width: 420px) {
-  .song { grid-template-columns: 36px minmax(0,1fr) auto; gap: 8px; padding: 14px 9px; }
+  .song {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 58px;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  padding: 14px 9px;
+}
   .rank { font-size: 20px; }
   .song-name { font-size: 13px; }
   .score { font-size: 17px; }
