@@ -89,29 +89,35 @@ main {
   
 /* Top 3 ranking cards */
 
-/* 1st place: compact trophy with a bold gold edge */
+/* First-place trophy */
 .song.rank-1 .rank {
   position: relative;
-  width: 42px;
-  height: 48px;
+  isolation: isolate;
+  width: 52px;
+  height: 60px;
   margin: 0 auto;
-  box-sizing: border-box;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  background: none;
+  border: none;
+  outline: none;
+  clip-path: none;
+  filter: none;
+  font-size: 0;
+}
 
-  color: #090909;
-  font-size: 19px;
-  font-weight: 900;
-
+/* Outer gold silhouette */
+.song.rank-1 .trophy-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   background: linear-gradient(
     135deg,
-    #fff2b0,
+    #fff4bd,
     #d4af37,
     #9c7118
   );
-
   clip-path: polygon(
     10% 0, 90% 0,
     90% 35%, 100% 45%,
@@ -120,13 +126,36 @@ main {
     30% 68%, 12% 68%,
     0 45%, 10% 35%
   );
+}
 
-  filter:
-    drop-shadow(2px 0 0 #f8e7a5)
-    drop-shadow(-2px 0 0 #f8e7a5)
-    drop-shadow(0 2px 0 #f8e7a5)
-    drop-shadow(0 -2px 0 #f8e7a5)
-    drop-shadow(0 0 5px #d4af37);
+/* Inner silhouette: creates the thick gold border */
+.song.rank-1 .trophy-face {
+  position: absolute;
+  inset: 5px;
+  background: linear-gradient(
+    135deg,
+    #f8e7a5,
+    #d4af37,
+    #9c7118
+  );
+  clip-path: polygon(
+    10% 0, 90% 0,
+    90% 35%, 100% 45%,
+    88% 68%, 70% 68%,
+    65% 100%, 35% 100%,
+    30% 68%, 12% 68%,
+    0 45%, 10% 35%
+  );
+}
+
+/* Number stays above both trophy layers */
+.song.rank-1 .rank-number {
+  position: relative;
+  z-index: 1;
+  color: #090909;
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .song.rank-2 {
@@ -339,9 +368,17 @@ function render() {
 
     return `
       <article class="song ${i < 3 ? `rank-${i + 1}` : ""}">
-        <div class="rank">
-        ${i === 0 ? "1" : i === 1 ? "2" : i === 2 ? "3" : (rank || i + 1)}
-        </div>
+        ```javascript
+<div class="rank">
+  ${
+    i === 0
+      ? `<span class="trophy-frame">
+           <span class="trophy-face"></span>
+         </span>
+         <span class="rank-number">1</span>`
+      : i === 1 ? "II" : i === 2 ? "III" : (rank || i + 1)
+  }
+</div>
         <div>
           <div class="song-name">${escapeHTML(s.name)}</div>
           <div class="song-meta">${meta}</div>
