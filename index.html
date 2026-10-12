@@ -125,30 +125,6 @@ main {
   filter: drop-shadow(0 0 4px #d4af37);
 }
 
-/* Inner trophy: smaller, leaving a gold border */
-.song.rank-1 .rank::before {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  z-index: -1;
-
-  background: linear-gradient(
-    135deg,
-    #d4af37,
-    #f8e7a5,
-    #b8860b
-  );
-
-  clip-path: polygon(
-    10% 0, 90% 0,
-    90% 35%, 100% 45%,
-    88% 68%, 70% 68%,
-    65% 100%, 35% 100%,
-    30% 68%, 12% 68%,
-    0 45%, 10% 35%
-  );
-}
-
 .song.rank-2 {
   padding: 23px 17px;
   border: 2px solid #aeb5bf;
