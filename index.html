@@ -89,28 +89,57 @@ main {
   
 /* Top 3 ranking cards */
 
+```css
+/* 1st place: gold trophy with a thick border */
 .song.rank-1 .rank {
   position: relative;
-  z-index: 0;
-  color: #090909;
-  background: linear-gradient(135deg, #fff2b0, #d4af37, #9c7118);
-  border: none;
-  outline: none;
-  width: 42px;
-  height: 48px;
+  isolation: isolate;
+  width: 52px;
+  height: 60px;
+  margin: 0 auto;
   box-sizing: border-box;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  font-size: 19px;
+
+  color: #090909;
+  font-size: 21px;
   font-weight: 900;
-  filter:
-    drop-shadow(2px 0 0 #f8e7a5)
-    drop-shadow(-2px 0 0 #f8e7a5)
-    drop-shadow(0 2px 0 #f8e7a5)
-    drop-shadow(0 -2px 0 #f8e7a5)
-    drop-shadow(0 0 5px #d4af37);
+
+  background: linear-gradient(
+    135deg,
+    #fff2b0,
+    #d4af37,
+    #9c7118
+  );
+
+  clip-path: polygon(
+    10% 0, 90% 0,
+    90% 35%, 100% 45%,
+    88% 68%, 70% 68%,
+    65% 100%, 35% 100%,
+    30% 68%, 12% 68%,
+    0 45%, 10% 35%
+  );
+
+  filter: drop-shadow(0 0 4px #d4af37);
+}
+
+/* Inner trophy: smaller, leaving a gold border */
+.song.rank-1 .rank::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: -1;
+
+  background: linear-gradient(
+    135deg,
+    #d4af37,
+    #f8e7a5,
+    #b8860b
+  );
+
   clip-path: polygon(
     10% 0, 90% 0,
     90% 35%, 100% 45%,
