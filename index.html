@@ -89,13 +89,14 @@ main {
   
 /* Top 3 ranking cards */
 
-/* First-place trophy */
+/* First-place trophy: thick gold frame */
 .song.rank-1 .rank {
   position: relative;
-  isolation: isolate;
-  width: 52px;
-  height: 60px;
+  width: 46px;
+  height: 52px;
   margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,14 +108,14 @@ main {
   font-size: 0;
 }
 
-/* Outer gold silhouette */
 .song.rank-1 .trophy-frame {
   position: absolute;
   inset: 0;
   z-index: 0;
+  display: block;
   background: linear-gradient(
     135deg,
-    #fff4bd,
+    #fff2b0,
     #d4af37,
     #9c7118
   );
@@ -128,15 +129,16 @@ main {
   );
 }
 
-/* Inner silhouette: creates the thick gold border */
 .song.rank-1 .trophy-face {
   position: absolute;
   inset: 5px;
+  z-index: 1;
+  display: block;
   background: linear-gradient(
     135deg,
+    #b8860b,
     #f8e7a5,
-    #d4af37,
-    #9c7118
+    #d4af37
   );
   clip-path: polygon(
     10% 0, 90% 0,
@@ -148,10 +150,10 @@ main {
   );
 }
 
-/* Number stays above both trophy layers */
 .song.rank-1 .rank-number {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  display: block;
   color: #090909;
   font-size: 19px;
   font-weight: 900;
