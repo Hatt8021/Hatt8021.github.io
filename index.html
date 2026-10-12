@@ -87,33 +87,6 @@ main {
   padding: 17px 14px;
   border-radius: 4px;
 }
-  
-/* TOP 3 HIGHLIGHT */
-.song.top-1 {
-  border-color: #c6a96b;
-  background: linear-gradient(100deg, #292114, #141414 65%);
-}
-
-.song.top-2 {
-  border-color: #777777;
-}
-
-.song.top-3 {
-  border-color: #87684c;
-}
-
-.song.top-1 .rank {
-  color: #f0d58e;
-}
-
-.song.top-2 .rank {
-  color: #d0d0d0;
-}
-
-.song.top-3 .rank {
-  color: #c99a75;
-}
-
 .rank {
   color: var(--gold);
   font-size: 24px;
@@ -243,25 +216,10 @@ async function loadSongs() {
   box.innerHTML = '<p class="note">Loading ranking data...</p>';
 
   try {
-    ```javascript
-const response = await fetch(CSV_URL, {
-  method: "GET",
-  redirect: "follow",
-  cache: "no-store"
-});
+    const response = await fetch(CSV_URL);
+    if (!response.ok) throw new Error("CSV load failed");
 
-if (!response.ok) {
-  throw new Error("CSV load failed: HTTP " + response.status);
-}
-
-const csvText = await response.text();
-
-if (!csvText || !csvText.includes("Song")) {
-  throw new Error("CSV data is empty or invalid");
-}
-
-const rows = parseCSV(csvText);
-```
+    const rows = parseCSV(await response.text());
     if (rows.length < 2) throw new Error("No data");
 
     songs = rows.slice(1)
@@ -323,17 +281,9 @@ function render() {
 
     const label = type === "overall" ? "平均順位" : "再生数";
 
-
-const medal = i === 0 ? "🥇" :
-  i === 1 ? "🥈" :
-  i === 2 ? "🥉" : "";
-
-const rankClass = i < 3 ? ` top-${i + 1}` : "";
-
-return `
-  <article class="song${rankClass}">
-    <div class="rank">${medal || rank || i + 1}</div>
-
+    return `
+      <article class="song">
+        <div class="rank">${rank || i + 1}</div>
         <div>
           <div class="song-name">${escapeHTML(s.name)}</div>
           <div class="song-meta">${meta}</div>
