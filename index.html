@@ -305,7 +305,9 @@ function render() {
 
     return `
       <article class="song ${i < 3 ? `rank-${i + 1}` : ""}">
-        <div class="rank">${rank || i + 1}</div>
+        <div class="rank">
+        ${rank === 1 ? "🏆" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : (rank || i + 1)}
+        </div>
         <div>
           <div class="song-name">${escapeHTML(s.name)}</div>
           <div class="song-meta">${meta}</div>
