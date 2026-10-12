@@ -223,6 +223,91 @@ footer {
   .song-name { font-size: 13px; }
   .score { font-size: 17px; }
 }
+  /* Ranking card layout fix */
+#ranking {
+width: 100%;
+min-width: 0;
+}
+
+.song {
+width: 100%;
+min-width: 0;
+grid-template-columns: 46px minmax(0, 1fr) auto;
+gap: 12px;
+align-items: center;
+padding: 17px 14px;
+}
+
+.song > div {
+min-width: 0;
+}
+
+.song-name {
+overflow-wrap: anywhere;
+word-break: normal;
+}
+
+.song-meta {
+overflow-wrap: anywhere;
+}
+
+.score {
+min-width: 48px;
+text-align: right;
+}
+
+/* Keep the top three cards consistent */
+.song.rank-1,
+.song.rank-2,
+.song.rank-3 {
+box-sizing: border-box;
+}
+
+/* Smartphone layout */
+@media (max-width: 420px) {
+.song {
+grid-template-columns: 36px minmax(0, 1fr) auto;
+gap: 8px;
+padding: 14px 9px;
+}
+
+.song.rank-1 {
+padding: 14px 9px;
+}
+
+.song.rank-2 {
+padding: 14px 9px;
+min-height: 0;
+}
+
+.song.rank-3 {
+padding: 14px 9px;
+min-height: 0;
+}
+
+.song.rank-1 .rank {
+width: 36px;
+height: 42px;
+}
+
+.rank {
+font-size: 20px;
+}
+
+.song-name {
+font-size: 13px;
+}
+
+.song-meta {
+font-size: 10px;
+}
+
+.score {
+min-width: 42px;
+font-size: 16px;
+}
+}
+
 </style>
 </head>
 <body>
