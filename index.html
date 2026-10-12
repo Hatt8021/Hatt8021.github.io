@@ -243,10 +243,25 @@ async function loadSongs() {
   box.innerHTML = '<p class="note">Loading ranking data...</p>';
 
   try {
-    const response = await fetch(CSV_URL);
-    if (!response.ok) throw new Error("CSV load failed");
+    ```javascript
+const response = await fetch(CSV_URL, {
+  method: "GET",
+  redirect: "follow",
+  cache: "no-store"
+});
 
-    const rows = parseCSV(await response.text());
+if (!response.ok) {
+  throw new Error("CSV load failed: HTTP " + response.status);
+}
+
+const csvText = await response.text();
+
+if (!csvText || !csvText.includes("Song")) {
+  throw new Error("CSV data is empty or invalid");
+}
+
+const rows = parseCSV(csvText);
+```
     if (rows.length < 2) throw new Error("No data");
 
     songs = rows.slice(1)
