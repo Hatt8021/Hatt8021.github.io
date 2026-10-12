@@ -91,13 +91,12 @@ main {
 
 .song.rank-1 .rank {
   position: relative;
-  isolation: isolate;
+  z-index: 0;
   color: #090909;
   background: linear-gradient(135deg, #fff2b0, #d4af37, #9c7118);
-  border: 3px solid #f8e7a5;
-  border-radius: 12px;
-  outline: 3px solid #d4af37;
-  outline-offset: 3px;
+  border: none;
+  border-radius: 0;
+  outline: none;
   width: 58px;
   height: 66px;
   box-sizing: border-box;
@@ -107,15 +106,7 @@ main {
   margin: 0 auto;
   font-size: 23px;
   font-weight: 900;
-  box-shadow: 0 0 18px #d4af3780;
-}
-
-.song.rank-1 .rank::before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  z-index: -1;
-  background: linear-gradient(135deg, #fff2b0, #d4af37, #9c7118);
+  filter: drop-shadow(0 0 5px #f8e7a5);
   clip-path: polygon(
     10% 0, 90% 0,
     90% 35%, 100% 45%,
