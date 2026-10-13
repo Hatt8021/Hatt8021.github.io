@@ -439,6 +439,33 @@ footer {
   border: 2px solid #d4af37 !important;
 }
 
+
+.trend {
+  display: inline-block;
+  margin-left: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.trend-up {
+  color: #55d68b;
+}
+
+.trend-down {
+  color: #ff7373;
+}
+
+.trend-same {
+  color: #b8b8b8;
+}
+
+.trend-new {
+  color: #e7c75c;
+  font-size: 10px;
+  letter-spacing: .04em;
+}
+
 </style>
 </head>
 <body>
@@ -538,6 +565,9 @@ async function loadSongs() {
         er: num(r[7]),
         score: r[8] === "" ? null : num(r[8]),
         jr: num(r[9])
+        prevGr: r[10]?.trim() === "" || r[10] == null ? null : num(r[10]),
+prevEr: r[11]?.trim() === "" || r[11] == null ? null : num(r[11]),
+prevJr: r[12]?.trim() === "" || r[12] == null ? null : num(r[12])
       }));
 
     const dates = songs.map(s => s.updated).filter(Boolean);
@@ -552,6 +582,23 @@ async function loadSongs() {
   }
 }
 
+
+function getTrend(currentRank, previousRank) {
+  if (previousRank == null || previousRank === "" || Number(previousRank) <= 0) {
+    return { mark: "NEW", className: "trend-new" };
+  }
+
+  if (currentRank < Number(previousRank)) {
+    return { mark: "↑", className: "trend-up" };
+  }
+
+  if (currentRank > Number(previousRank)) {
+    return { mark: "↓", className: "trend-down" };
+  }
+
+  return { mark: "→", className: "trend-same" };
+}
+  
 function render() {
   let ranked = [...songs];
 
@@ -583,6 +630,10 @@ function render() {
       (s.score === null ? "—" : s.score.toFixed(1));
 
     const label = type === "overall" ? "平均順位" : "再生数";
+    const previousRank = type === "gbuc" ? s.prevGr :
+  type === "eggs" ? s.prevEr : s.prevJr;
+
+const trend = getTrend(rank, previousRank);
 
     return `
       <article class="song ${i < 3 ? `rank-${i + 1}` : ""}">
@@ -607,7 +658,10 @@ function render() {
   }
 </div>
         <div>
-          <div class="song-name">${escapeHTML(s.name)}</div>
+          <div class="song-name">
+  ${escapeHTML(s.name)}
+  <span class="trend ${trend.className}">${trend.mark}</span>
+</div>
           <div class="song-meta">${meta}</div>
         </div>
         <div class="score">
