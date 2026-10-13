@@ -590,10 +590,10 @@ async function loadSongs() {
         gr: num(r[6]),
         er: num(r[7]),
         score: r[8] === "" ? null : num(r[8]),
-        jr: num(r[9])
+        jr: num(r[9]),
         prevGr: r[10]?.trim() === "" || r[10] == null ? null : num(r[10]),
-prevEr: r[11]?.trim() === "" || r[11] == null ? null : num(r[11]),
-prevJr: r[12]?.trim() === "" || r[12] == null ? null : num(r[12])
+        prevEr: r[11]?.trim() === "" || r[11] == null ? null : num(r[11]),
+        prevJr: r[12]?.trim() === "" || r[12] == null ? null : num(r[12])
       }));
 
     const dates = songs.map(s => s.updated).filter(Boolean);
