@@ -777,9 +777,17 @@ document.querySelectorAll(".tabs button").forEach(button => {
   });
 });
 
+
 document.getElementById("songSearch").addEventListener("input", event => {
-  searchQuery = event.target.value;
+  searchQuery = event.target.value.trim().toLowerCase();
+
+  const ranked = songs.filter(song =>
+    String(song.name).toLowerCase().includes(searchQuery)
+  );
+
   console.log("検索語:", searchQuery);
+  console.log("検索結果:", ranked.length);
+
   render();
 });
 
