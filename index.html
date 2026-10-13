@@ -779,6 +779,7 @@ document.querySelectorAll(".tabs button").forEach(button => {
 
 document.getElementById("songSearch").addEventListener("input", event => {
   searchQuery = event.target.value;
+  console.log("検索語:", searchQuery);
   render();
 });
 
