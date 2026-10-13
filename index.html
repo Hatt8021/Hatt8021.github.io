@@ -715,6 +715,17 @@ document.querySelectorAll(".tabs button").forEach(button => {
   });
 });
 
+document.getElementById("songSearch").addEventListener("input", event => {
+  searchQuery = event.target.value;
+  render();
+});
+
+document.getElementById("clearSearch").addEventListener("click", () => {
+  document.getElementById("songSearch").value = "";
+  searchQuery = "";
+  render();
+});
+  
 loadSongs();
 </script>
 </body>
