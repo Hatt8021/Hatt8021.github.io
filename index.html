@@ -683,18 +683,15 @@ function getTrend(currentRank, previousRank) {
   return { mark: "→", className: "trend-same" };
 }
   
+const query = document.getElementById("songSearch").value
+  .trim()
+  .toLowerCase();
 
-
-function render() {
-  let ranked = [...songs];
-
-  const query = searchQuery.trim().toLowerCase();
-
-  if (query !== "") {
-    ranked = ranked.filter(s =>
-      String(s.name).toLowerCase().includes(query)
-    );
-  }
+if (query !== "") {
+  ranked = ranked.filter(song =>
+    String(song.name).toLowerCase().includes(query)
+  );
+}
 
   if (type === "gbuc") {
     ranked.sort((a, b) => (a.gr || 999999) - (b.gr || 999999));
@@ -777,17 +774,7 @@ document.querySelectorAll(".tabs button").forEach(button => {
   });
 });
 
-
-document.getElementById("songSearch").addEventListener("input", event => {
-  searchQuery = event.target.value.trim().toLowerCase();
-
-  const ranked = songs.filter(song =>
-    String(song.name).toLowerCase().includes(searchQuery)
-  );
-
-  console.log("検索語:", searchQuery);
-  console.log("検索結果:", ranked.length);
-
+document.getElementById("songSearch").addEventListener("input", () => {
   render();
 });
 
