@@ -512,8 +512,21 @@ footer {
     <button data-type="eggs">Eggs</button>
     <button data-type="overall">Overall</button>
   </div>
-  <h2 class="section-title" id="heading">GBUC RANKING</h2>
-  <div id="ranking"></div>
+  
+<h2 class="section-title" id="heading">GBUC RANKING</h2>
+
+<div class="search-box">
+  <span aria-hidden="true">⌕</span>
+  <input
+    id="songSearch"
+    type="search"
+    placeholder="楽曲名で検索..."
+    aria-label="楽曲名で検索"
+  >
+  <button id="clearSearch" type="button" aria-label="検索をクリア">×</button>
+</div>
+
+<div id="ranking"></div>
   <p class="note">
     Ranking data is manually maintained.<br>
     Last updated: <span id="updated">—</span><br>
