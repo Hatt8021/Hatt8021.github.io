@@ -577,6 +577,7 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTKmDAfBSUBfppj
 
 let songs = [];
 let type = "gbuc";
+let searchQuery = "";
 
 function parseCSV(text) {
   const rows = [];
@@ -682,8 +683,18 @@ function getTrend(currentRank, previousRank) {
   return { mark: "→", className: "trend-same" };
 }
   
+
+
 function render() {
   let ranked = [...songs];
+
+  const query = searchQuery.trim().toLowerCase();
+
+  if (query !== "") {
+    ranked = ranked.filter(s =>
+      String(s.name).toLowerCase().includes(query)
+    );
+  }
 
   if (type === "gbuc") {
     ranked.sort((a, b) => (a.gr || 999999) - (b.gr || 999999));
