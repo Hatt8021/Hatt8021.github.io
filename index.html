@@ -258,27 +258,118 @@ footer {
   }
 }
 
-  /* 1位：金トロフィー */
-.trophy-frame.gold {
-  color: #d4af37;
+/* 2位・3位専用トロフィー */
+.song.rank-2 .rank,
+.song.rank-3 .rank {
+  position: relative;
+  width: 36px;
+  height: 42px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  font-size: 0;
 }
 
-/* 2位：銀トロフィー */
-.trophy-frame.silver {
-  color: #c0c0c0;
+.song.rank-2 .trophy-frame,
+.song.rank-3 .trophy-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  clip-path: polygon(
+    10% 0, 90% 0,
+    90% 35%, 100% 45%,
+    88% 68%, 70% 68%,
+    65% 100%, 35% 100%,
+    30% 68%, 12% 68%,
+    0 45%, 10% 35%
+  );
 }
 
-.rank-number.silver-number {
-  color: #ffffff;
+/* 2位：銀 */
+.song.rank-2 .trophy-frame {
+  background: linear-gradient(
+    135deg,
+    #f5f5f5,
+    #aeb5bf,
+    #737b87
+  );
 }
 
-/* 3位：銅トロフィー */
-.trophy-frame.bronze {
-  color: #b87333;
+.song.rank-2 .trophy-face {
+  position: absolute;
+  inset: 5px;
+  z-index: 1;
+  display: block;
+  background: linear-gradient(
+    135deg,
+    #858c96,
+    #f4f4f4,
+    #b7bec8
+  );
+  clip-path: polygon(
+    10% 0, 90% 0,
+    90% 35%, 100% 45%,
+    88% 68%, 70% 68%,
+    65% 100%, 35% 100%,
+    30% 68%, 12% 68%,
+    0 45%, 10% 35%
+  );
 }
 
-.rank-number.bronze-number {
-  color: #000000;
+.song.rank-2 .rank-number {
+  position: relative;
+  z-index: 2;
+  display: block;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* 3位：銅 */
+.song.rank-3 .trophy-frame {
+  background: linear-gradient(
+    135deg,
+    #e6ad82,
+    #b87350,
+    #754329
+  );
+}
+
+.song.rank-3 .trophy-face {
+  position: absolute;
+  inset: 5px;
+  z-index: 1;
+  display: block;
+  background: linear-gradient(
+    135deg,
+    #985b3d,
+    #d99a72,
+    #a96948
+  );
+  clip-path: polygon(
+    10% 0, 90% 0,
+    90% 35%, 100% 45%,
+    88% 68%, 70% 68%,
+    65% 100%, 35% 100%,
+    30% 68%, 12% 68%,
+    0 45%, 10% 35%
+  );
+}
+
+.song.rank-3 .rank-number {
+  position: relative;
+  z-index: 2;
+  display: block;
+  color: #000;
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 </style>
