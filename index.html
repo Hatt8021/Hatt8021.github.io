@@ -258,6 +258,29 @@ footer {
   }
 }
 
+  /* 1位：金トロフィー */
+.trophy-frame.gold {
+  color: #d4af37;
+}
+
+/* 2位：銀トロフィー */
+.trophy-frame.silver {
+  color: #c0c0c0;
+}
+
+.rank-number.silver-number {
+  color: #ffffff;
+}
+
+/* 3位：銅トロフィー */
+.trophy-frame.bronze {
+  color: #b87333;
+}
+
+.rank-number.bronze-number {
+  color: #000000;
+}
+
 </style>
 </head>
 <body>
@@ -408,11 +431,21 @@ function render() {
     <div class="rank">
   ${
     i === 0
-      ? `<span class="trophy-frame">
+  ? `<span class="trophy-frame gold">
+       <span class="trophy-face"></span>
+     </span>
+     <span class="rank-number">1</span>`
+  : i === 1
+    ? `<span class="trophy-frame silver">
+         <span class="trophy-face"></span>
+       </span>
+       <span class="rank-number silver-number">2</span>`
+    : i === 2
+      ? `<span class="trophy-frame bronze">
            <span class="trophy-face"></span>
          </span>
-         <span class="rank-number">1</span>`
-      : i === 1 ? "2" : i === 2 ? "3" : (rank || i + 1)
+         <span class="rank-number bronze-number">3</span>`
+      : (rank || i + 1)
   }
 </div>
         <div>
