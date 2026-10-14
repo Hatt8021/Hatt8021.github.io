@@ -726,21 +726,27 @@ if (query !== "") {
 
 const trend = getTrend(rank, previousRank);
 
-    return `
-      <article class="song ${i < 3 ? `rank-${i + 1}` : ""}">
+    const position = Number(rank);
+const rankClass = position >= 1 && position <= 3
+  ? `rank-${position}`
+  : "";
+
+return `
+  <article class="song ${rankClass}">
     <div class="rank">
   ${
-    i === 0
+    
+position === 1
   ? `<span class="trophy-frame gold">
        <span class="trophy-face"></span>
      </span>
      <span class="rank-number">1</span>`
-  : i === 1
+  : position === 2
     ? `<span class="trophy-frame silver">
          <span class="trophy-face"></span>
        </span>
        <span class="rank-number silver-number">2</span>`
-    : i === 2
+    : position === 3
       ? `<span class="trophy-frame bronze">
            <span class="trophy-face"></span>
          </span>
