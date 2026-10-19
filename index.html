@@ -704,13 +704,16 @@ if (query !== "") {
   );
 }
 
-  if (type === "gbuc") {
-    ranked.sort((a, b) => (a.gr || 999999) - (b.gr || 999999));
-  } else if (type === "eggs") {
-    ranked.sort((a, b) => (a.er || 999999) - (b.er || 999999));
-  } else {
-    ranked.sort((a, b) => (a.jr || 999999) - (b.jr || 999999));
-  }
+  const getRank = song =>
+  Number.isFinite(Number(song[type === "gbuc" ? "gr" :
+    type === "eggs" ? "er" : "jr"])) &&
+  Number(song[type === "gbuc" ? "gr" :
+    type === "eggs" ? "er" : "jr"]) > 0
+    ? Number(song[type === "gbuc" ? "gr" :
+        type === "eggs" ? "er" : "jr"])
+    : Infinity;
+
+ranked.sort((a, b) => getRank(a) - getRank(b));
 
   document.getElementById("heading").textContent =
     type === "gbuc" ? "GBUC RANKING" :
