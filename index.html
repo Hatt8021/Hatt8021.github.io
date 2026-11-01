@@ -693,27 +693,38 @@ function getTrend(currentRank, previousRank) {
 
 function render() {
   let ranked = [...songs];
-  
-const query = document.getElementById("songSearch").value
-  .trim()
-  .toLowerCase();
-
-if (query !== "") {
-  ranked = ranked.filter(song =>
-    String(song.name).toLowerCase().includes(query)
-  );
-}
 
   const getRank = song =>
-  Number.isFinite(Number(song[type === "gbuc" ? "gr" :
-    type === "eggs" ? "er" : "jr"])) &&
-  Number(song[type === "gbuc" ? "gr" :
-    type === "eggs" ? "er" : "jr"]) > 0
-    ? Number(song[type === "gbuc" ? "gr" :
-        type === "eggs" ? "er" : "jr"])
-    : Infinity;
+    Number(type === "gbuc" ? song.gr :
+      type === "eggs" ? song.er : song.jr);
 
-ranked.sort((a, b) => getRank(a) - getRank(b));
+  // まず全曲を本来の順位順に並べる
+  ranked.sort((a, b) => {
+    const rankA = getRank(a);
+    const rankB = getRank(b);
+
+    return (rankA > 0 ? rankA : Infinity) -
+           (rankB > 0 ? rankB : Infinity);
+  });
+
+  // 検索前の順位を保存
+  ranked = ranked.map((song, index) => ({
+    ...song,
+    originalRank: getRank(song) > 0
+      ? getRank(song)
+      : index + 1
+  }));
+
+  // その後で検索する
+  const query = document.getElementById("songSearch").value
+    .trim()
+    .toLowerCase();
+
+  if (query !== "") {
+    ranked = ranked.filter(song =>
+      String(song.name).toLowerCase().includes(query)
+    );
+  }
 
   document.getElementById("heading").textContent =
     type === "gbuc" ? "GBUC RANKING" :
@@ -730,8 +741,7 @@ if (ranked.length === 0) {
 }
 
 rankingElement.innerHTML = ranked.map((s, i) => {
-    const rank = type === "gbuc" ? s.gr :
-      type === "eggs" ? s.er : s.jr;
+    const rank = s.originalRank;
 
     const meta = type === "gbuc"
       ? `Plays: ${s.bp} / Votes: ${s.bv}`
